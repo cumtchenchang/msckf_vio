@@ -223,6 +223,8 @@ bool MsckfVio::loadParameters() {
 
 bool MsckfVio::createRosIO() {
   odom_pub = nh.advertise<nav_msgs::Odometry>("odom", 10);
+  //path_pub = nh.advertise<nav_msgs::Path>("trajectory", 10);
+  path_pub = nh.advertise<geometry_msgs::PoseStamped>("trajectory", 10);   //add 
   feature_pub = nh.advertise<sensor_msgs::PointCloud2>(
       "feature_point_cloud", 10);
 
@@ -1437,6 +1439,55 @@ void MsckfVio::publish(const ros::Time& time) {
 
   tf::poseEigenToMsg(T_b_w, odom_msg.pose.pose);
   tf::vectorEigenToMsg(body_velocity, odom_msg.twist.twist.linear);
+  
+                                                                                                       // add 
+  //Publish the path
+  // nav_msgs::Path path_msg;
+  // path_msg.header.stamp = time;
+  // path_msg.header.frame_id = fixed_frame_id;
+   
+   //geometry_msgs::PoseStamped pathposestamp;
+   //pathposestamp.header.stamp = time;
+   //pathposestamp.header.frame_id = fixed_frame_id;
+   //tf::poseEigenToMsg(T_b_w, pathposestamp.pose);
+   //path_msg.poses.push_back(pathposestamp);
+   
+   
+   //path_pub.publish(path_msg);
+
+    //Publish the PoseStamped
+   
+   geometry_msgs::PoseStamped path_msg;
+   path_msg.header.stamp = time;
+   path_msg.header.frame_id = fixed_frame_id;
+   tf::poseEigenToMsg(T_b_w, path_msg.pose);
+  // path_msg.pose.push_back(path_msg);
+   path_pub.publish(path_msg);
+
+  //save results
+     ofstream foutC("/home/vio/catkin_ws/src/msckf_vio/msckf_results_1.txt", ios::app);  
+     if (!foutC.is_open())   
+    {  
+         cout << "error!"<<endl;  
+     }  
+      
+
+
+
+   //ofstream foutC("/home/cc/catkin_ws/src/msckf_vio/msckf_results.txt", ios::app);   // imput Tum format
+   foutC.setf(ios::fixed, ios::floatfield);
+   
+   foutC.precision(9);
+   foutC << time << " "; 
+   foutC.precision(6);
+   foutC << path_msg.pose.position.x << " "
+         << path_msg.pose.position.y << " "
+         << path_msg.pose.position.z << " "
+         << path_msg.pose.orientation.x << " "
+         << path_msg.pose.orientation.y << " "
+         << path_msg.pose.orientation.z << " "
+         << path_msg.pose.orientation.w <<endl;
+   foutC.close();                                                // till this line 
 
   // Convert the covariance.
   Matrix3d P_oo = state_server.state_cov.block<3, 3>(0, 0);
