@@ -10,6 +10,7 @@
 #include <cmath>
 #include <iterator>
 #include <algorithm>
+#include <fstream>                                           // add by wangyacong
 
 #include <Eigen/SVD>
 #include <Eigen/QR>
