@@ -1,3 +1,7 @@
+if you do not know how to use, follow this setps:
+rviz -d rviz_euroc_config.rviz
+roslaunch msckf_vio msckf_vio_euroc.launch
+rosbag play V1_02_medium.bag
 # MSCKF\_VIO
 
 
