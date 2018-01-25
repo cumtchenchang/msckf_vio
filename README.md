@@ -1,7 +1,14 @@
+# TODO
+因图像提取特征较少，在后期特征丢失或不足后依赖IMU定位，整体漂移较严重。
+尝试提高特征点数量；或采用混合特征；
+调整前端和后端的机制，进行改进。
 if you do not know how to use, follow this setps:
 rviz -d rviz_euroc_config.rviz
+
 roslaunch msckf_vio msckf_vio_euroc.launch
+
 rosbag play V1_02_medium.bag
+
 # MSCKF\_VIO
 
 
